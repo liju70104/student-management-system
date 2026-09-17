@@ -200,9 +200,12 @@ Frontend Web App will run at: **`http://localhost:5173/`**
 
 ## 🧪 Testing Information
 
-The backend includes a comprehensive unit test suite in `backend/students/tests.py` verifying all CRUD endpoints, duplicate validations, and search features.
+The system includes automated tests and code quality checks for both backend and frontend:
 
-To run the automated tests:
+### 1. Backend Automated Tests (Django / DRF)
+The backend includes a comprehensive test suite in `backend/students/tests.py` verifying all CRUD endpoints, duplicate validations, statistics, and search features.
+
+To run the automated backend tests:
 ```bash
 cd backend
 venv\Scripts\python manage.py test students
@@ -218,6 +221,16 @@ venv\Scripts\python manage.py test students
 - Search keyword filtering (`?search=...`)
 - Duplicate Student ID / Register Number rejection
 - Department statistics endpoint calculation
+
+### 2. Frontend Build & Quality Checks
+```bash
+cd frontend
+# Run linter
+npm run lint
+
+# Build production bundle
+npm run build
+```
 
 ---
 
