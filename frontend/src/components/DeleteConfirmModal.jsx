@@ -1,5 +1,4 @@
-import React from 'react';
-import { AlertTriangle, Trash2, X, Loader2 } from 'lucide-react';
+import { AlertTriangle, Trash2, Loader2 } from 'lucide-react';
 
 export default function DeleteConfirmModal({ isOpen, onClose, onConfirm, student, isDeleting }) {
   if (!isOpen || !student) return null;
