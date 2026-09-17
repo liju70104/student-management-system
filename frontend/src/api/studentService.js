@@ -1,4 +1,6 @@
-const API_BASE_URL = 'http://127.0.0.1:8000/api/students';
+import { API_ENDPOINTS } from './config';
+
+const API_BASE_URL = API_ENDPOINTS.students;
 
 /**
  * Handle API responses with structured JSON error decoding

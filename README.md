@@ -256,6 +256,46 @@ npm run build
 
 ---
 
+## 🚀 Deployment Guide (Vercel & Render)
+
+This application is architected for decoupled cloud deployment:
+- **Frontend** → **Vercel**
+- **Backend** → **Render**
+
+### 1. Backend Deployment on Render
+
+1. **Push your code** to GitHub.
+2. Sign in to [Render](https://render.com/) and click **New +** -> **Web Service** (or use Blueprint via `render.yaml`).
+3. Connect your repository `student-management-system`.
+4. Configure service settings:
+   - **Root Directory**: `backend`
+   - **Runtime**: `Python 3`
+   - **Build Command**: `./build.sh`
+   - **Start Command**: `gunicorn core.wsgi:application`
+5. Configure Environment Variables:
+   - `PYTHON_VERSION`: `3.12.8`
+   - `DJANGO_DEBUG`: `False`
+   - `DJANGO_SECRET_KEY`: `<Generate a secure random string>`
+   - `CORS_ALLOWED_ORIGINS`: `https://<your-frontend>.vercel.app`
+   - `CORS_ALLOW_ALL_ORIGINS`: `False`
+   - *(Optional PostgreSQL)* `DATABASE_URL`: Add a Render PostgreSQL database and link its Internal Database URL. If omitted, Django automatically uses SQLite.
+6. Click **Deploy**. Note your live Render backend URL: e.g. `https://student-backend.onrender.com`.
+
+### 2. Frontend Deployment on Vercel
+
+1. Sign in to [Vercel](https://vercel.com/) and click **Add New...** -> **Project**.
+2. Import your GitHub repository `student-management-system`.
+3. In the project configuration:
+   - **Framework Preset**: Vite
+   - **Root Directory**: Click edit and select `frontend`
+4. Expand **Environment Variables** and add:
+   - **Key**: `VITE_API_URL`
+   - **Value**: `https://<your-backend>.onrender.com` (Your live Render backend URL without trailing slash)
+5. Click **Deploy**.
+6. Once deployed, copy your Vercel domain (e.g. `https://student-sms.vercel.app`) and ensure it is listed in your Render backend `CORS_ALLOWED_ORIGINS`.
+
+---
+
 ## 🔮 Future Enhancements
 
 - [ ] **Role-Based Authentication (JWT)**: Login roles for Administrators vs. Teachers vs. Students.

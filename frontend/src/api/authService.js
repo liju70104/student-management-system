@@ -1,4 +1,6 @@
-const AUTH_API_URL = 'http://127.0.0.1:8000/api/login/';
+import { API_ENDPOINTS } from './config';
+
+const AUTH_API_URL = API_ENDPOINTS.login;
 const STORAGE_KEY = 'sms_auth_user';
 
 export const authService = {
