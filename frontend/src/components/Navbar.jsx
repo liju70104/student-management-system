@@ -1,7 +1,7 @@
 import React from 'react';
-import { GraduationCap, Users, Building2, Plus, RefreshCw } from 'lucide-react';
+import { GraduationCap, Users, Building2, Plus, RefreshCw, LogOut, UserCheck } from 'lucide-react';
 
-export default function Navbar({ stats, onOpenAddModal, onRefresh, isRefreshing }) {
+export default function Navbar({ stats, onOpenAddModal, onRefresh, isRefreshing, user, onLogout }) {
   return (
     <header className="navbar-wrapper">
       <div className="navbar-container">
@@ -44,6 +44,23 @@ export default function Navbar({ stats, onOpenAddModal, onRefresh, isRefreshing 
             <Plus size={18} />
             <span>Add Student</span>
           </button>
+
+          {/* User Session & Logout */}
+          <div className="user-session-group">
+            <div className="user-pill" title={`Logged in as ${user?.name || user?.username || 'Admin'}`}>
+              <UserCheck size={15} className="user-pill-icon" />
+              <span className="user-pill-name">{user?.username || 'admin'}</span>
+            </div>
+            <button
+              className="btn-logout"
+              onClick={onLogout}
+              title="Sign out of system"
+              aria-label="Logout"
+            >
+              <LogOut size={16} />
+              <span>Logout</span>
+            </button>
+          </div>
         </div>
       </div>
     </header>

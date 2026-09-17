@@ -1,13 +1,18 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { studentService } from './api/studentService';
+import { authService } from './api/authService';
 import Navbar from './components/Navbar';
 import StudentTable from './components/StudentTable';
 import StudentModal from './components/StudentModal';
 import DeleteConfirmModal from './components/DeleteConfirmModal';
+import LoginPage from './components/LoginPage';
 import Toast from './components/Toast';
 import './App.css';
 
 export default function App() {
+  // Authentication State
+  const [user, setUser] = useState(() => authService.getCurrentUser());
+
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -59,19 +64,33 @@ export default function App() {
     }
   }, []);
 
-  // Initial load
+  // Initial load when authenticated
   useEffect(() => {
-    fetchStudents();
-    fetchStats();
-  }, [fetchStudents, fetchStats]);
+    if (user) {
+      fetchStudents();
+      fetchStats();
+    }
+  }, [user, fetchStudents, fetchStats]);
 
   // Debounced search when user types in search box
   useEffect(() => {
+    if (!user) return;
     const handler = setTimeout(() => {
       fetchStudents(searchQuery, true);
     }, 280);
     return () => clearTimeout(handler);
-  }, [searchQuery, fetchStudents]);
+  }, [searchQuery, user, fetchStudents]);
+
+  const handleLoginSuccess = (userData) => {
+    setUser(userData);
+    showToast(`Welcome back, ${userData.name || userData.username}!`, 'success');
+  };
+
+  const handleLogout = () => {
+    authService.logout();
+    setUser(null);
+    showToast('You have been logged out successfully.', 'info');
+  };
 
   // Unique departments for filter dropdown
   const departmentsList = useMemo(() => {
@@ -159,14 +178,26 @@ export default function App() {
     }
   };
 
+  // If user is not authenticated, render Login Page
+  if (!user) {
+    return (
+      <div className="login-root">
+        <Toast toast={toast} onClose={() => setToast(null)} />
+        <LoginPage onLoginSuccess={handleLoginSuccess} />
+      </div>
+    );
+  }
+
   return (
     <div className="app-layout">
       {/* Toast Feedback */}
       <Toast toast={toast} onClose={() => setToast(null)} />
 
-      {/* Modern Header Navigation */}
+      {/* Modern Header Navigation with User Session & Logout */}
       <Navbar
         stats={stats}
+        user={user}
+        onLogout={handleLogout}
         onOpenAddModal={handleOpenAddModal}
         onRefresh={() => {
           fetchStudents(searchQuery);

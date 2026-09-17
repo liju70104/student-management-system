@@ -12,12 +12,30 @@ The **Student Management System** is an educational administrative application d
 
 ## ✨ Features
 
+- **Administrative Login Gate**: Secure authentication screen with credential validation, password visibility toggle, session persistence, and logout.
 - **Real-Time Student Search**: Instant search across Student ID, Full Name, Register Number, Department, and Email.
 - **Department Filtering**: Quick-filter dropdown to view students by specific departments.
 - **Dynamic Stats & Counters**: Live summary chips showing total registered students and department count.
 - **Modern Responsive UI**: Custom glassmorphism styling, vibrant color-coded badges, dark dashboard aesthetic, and mobile-friendly layouts.
 - **Toast Feedback Alerts**: Instant success and error notifications for every database operation.
 - **Pre-populated Sample Data**: Includes a Django management command to seed sample student records for immediate testing.
+
+---
+
+## 🔐 Authentication & Demo Credentials
+
+Access to the Student Management Dashboard is protected by a login screen. Unauthenticated visitors are automatically directed to sign in.
+
+| Field | Demo Credential |
+|---|---|
+| **Username** | `admin` |
+| **Password** | `admin123` |
+
+### Key Authentication Features:
+- **Protected Routing**: Unauthenticated sessions cannot view the student directory.
+- **Session Persistence**: Maintains login state across page navigation and browser reloads via `localStorage`.
+- **One-Click Demo Autofill**: Convenient button on the login card to test access instantly.
+- **Secure Logout**: Easily sign out from the navigation bar, clearing all credentials.
 
 ---
 
@@ -187,6 +205,7 @@ Frontend Web App will run at: **`http://localhost:5173/`**
 
 | Method | Endpoint | Description |
 |---|---|---|
+| `POST` | `/api/login/` | Authenticate administrator credentials (`admin` / `admin123`) |
 | `GET` | `/api/students/` | List all students |
 | `GET` | `/api/students/?search=<query>` | Search across name, ID, register no, dept, email |
 | `POST` | `/api/students/` | Register a new student |
@@ -203,7 +222,7 @@ Frontend Web App will run at: **`http://localhost:5173/`**
 The system includes automated tests and code quality checks for both backend and frontend:
 
 ### 1. Backend Automated Tests (Django / DRF)
-The backend includes a comprehensive test suite in `backend/students/tests.py` verifying all CRUD endpoints, duplicate validations, statistics, and search features.
+The backend includes a comprehensive test suite in `backend/students/tests.py` verifying all CRUD endpoints, duplicate validations, statistics, search features, and authentication.
 
 To run the automated backend tests:
 ```bash
@@ -211,7 +230,10 @@ cd backend
 venv\Scripts\python manage.py test students
 ```
 
-**Test Coverage:**
+**Test Coverage (12 tests):**
+- Authentication with valid credentials (`POST /api/login/`)
+- Authentication rejection on invalid credentials
+- Authentication rejection on missing fields
 - Listing students (`GET /api/students/`)
 - Creating a student (`POST /api/students/`)
 - Retrieving single record (`GET /api/students/<id>/`)

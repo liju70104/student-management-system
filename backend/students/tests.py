@@ -114,3 +114,27 @@ class StudentAPITests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('total_students', response.data)
         self.assertIn('departments', response.data)
+
+    def test_login_success(self):
+        """Test authentication with valid credentials"""
+        url = reverse('login')
+        response = self.client.post(url, {'username': 'admin', 'password': 'admin123'}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data.get('success'))
+        self.assertIn('token', response.data)
+        self.assertEqual(response.data['user']['username'], 'admin')
+
+    def test_login_invalid_credentials(self):
+        """Test authentication rejection with invalid credentials"""
+        url = reverse('login')
+        response = self.client.post(url, {'username': 'admin', 'password': 'wrongpassword'}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertFalse(response.data.get('success'))
+        self.assertIn('detail', response.data)
+
+    def test_login_missing_fields(self):
+        """Test authentication rejection when fields are missing"""
+        url = reverse('login')
+        response = self.client.post(url, {'username': '', 'password': ''}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertFalse(response.data.get('success'))
